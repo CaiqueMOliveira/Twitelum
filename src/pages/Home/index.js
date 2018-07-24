@@ -5,6 +5,7 @@ import Dashboard from '../../components/Dashboard'
 import Widget from '../../components/Widget'
 import TrendsArea from '../../components/TrendsArea'
 import Tweet from '../../components/Tweet'
+import Helmet from "react-helmet";
 
 class Home extends Component {
 
@@ -26,18 +27,40 @@ class Home extends Component {
     //   Remove o refresh da tela
     event.preventDefault()
 
-    this.setState({
-        // Add o novo tweet ao array exibido no feed        
-        tweets: [this.state.novoTweet, ...this.state.tweets],
-        
-        // Limpa o campo de mensagem do novo tweet
-        novoTweet: ''
+    fetch(`http://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('token')}`,{
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({conteudo: this.state.novoTweet})
+    })
+    .then((respostaDoServer) => {
+        if(respostaDoServer.status === 201)
+        {
+            return respostaDoServer.json()
+        }else{
+            throw new Error('Falha ao criar o novo tweet :(')
+        }
+    })
+    .then((tweetDoServer) => {
+        console.log(tweetDoServer)
+        this.setState({
+            // Add o novo tweet ao array exibido no feed        
+            tweets: [tweetDoServer, ...this.state.tweets],
+            
+            // Limpa o campo de mensagem do novo tweet
+            novoTweet: ''
+        })
+    })
+    .catch((error) => {
+        alert(error)
     })
   }
 
   render() {
     return (
       <Fragment>
+        <Helmet title={`Home (${this.state.tweets.length}) - Twitelum`}/>
         <Cabecalho>
             <NavMenu usuario="@caiquemoliveira" />
         </Cabecalho>
@@ -66,7 +89,7 @@ class Home extends Component {
                     <div className="tweetsArea">
                         {
                             // Exibe cada tweet presente no array contido no state 
-                            this.state.tweets.map((tweet, index) => <Tweet key={index} message={tweet}/>)
+                            this.state.tweets.map((tweet) => <Tweet key={tweet._id} message={tweet.conteudo} usuario={tweet.usuario}/>)
                         }
                     </div>
                 </Widget>

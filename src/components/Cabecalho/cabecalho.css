@@ -2,6 +2,7 @@
 .cabecalho {
     width: 100%;
     background-color: #fff;
+    box-shadow: 0 2px 4px 2px rgba(0,0,0,.10), 0 4px 8px 4px rgba(0,0,0,.08);
   }
   .cabecalho__container {
     padding: 0 15px;

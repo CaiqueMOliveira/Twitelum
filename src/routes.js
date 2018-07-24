@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PrivateRoute from './components/PrivateRoute';
 import {Switch, Route} from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -9,7 +10,7 @@ class Routes extends Component
     render() {
         return (
             <Switch>
-                <Route path="/" exact component={Home}/>
+                <PrivateRoute path="/" exact component={Home}/>
                 <Route path="/login" component={Login}/>
                 <Route component={() => <div>Not Found 404</div>}/>
             </Switch>
