@@ -77,4 +77,4 @@ class Home extends Component {
   }
 }
 
-export default App;
+export default Home;

@@ -12,20 +12,13 @@ import './assets/css/notificacao.css'
 import './assets/css/novoTweet.css'
 // import './index.css';
 
-
-import Home from './pages/Home';
-import Login from './pages/Login';
 import {BrowserRouter} from 'react-router-dom';
-import {Switch, Route} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
+import Routes from './routes'
 
 ReactDOM.render(
     <BrowserRouter>
-        <Switch>
-            <Route path="/" exact component={Home}/>
-            <Route path="/login" component={Login}/>
-            <Route component={() => <div>Not Found 404</div>}/>
-        </Switch>
+        <Routes/>
     </BrowserRouter>, 
     document.getElementById('root')
 );
