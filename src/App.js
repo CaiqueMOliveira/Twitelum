@@ -14,7 +14,7 @@ class App extends Component {
       // estados dos objetos
       this.state = {
         novoTweet: '',
-        tweets: ['something like that']
+        tweets: []
     };
   }
 
@@ -26,8 +26,13 @@ class App extends Component {
     //   Remove o refresh da tela
     event.preventDefault()
 
-    // Add o novo tweet ao array exibido no feed
-    this.setState({tweets: this.state.tweets.concat([this.state.novoTweet])})
+    this.setState({
+        // Add o novo tweet ao array exibido no feed        
+        tweets: [this.state.novoTweet, ...this.state.tweets],
+        
+        // Limpa o campo de mensagem do novo tweet
+        novoTweet: ''
+    })
   }
 
   render() {
@@ -61,7 +66,7 @@ class App extends Component {
                     <div className="tweetsArea">
                         {
                             // Exibe cada tweet presente no array contido no state 
-                            this.state.tweets.map((tweet) => <Tweet key={Math.floor(Math.random()*1000000   )} message={tweet}/>)
+                            this.state.tweets.map((tweet, index) => <Tweet key={index} message={tweet}/>)
                         }
                     </div>
                 </Widget>
