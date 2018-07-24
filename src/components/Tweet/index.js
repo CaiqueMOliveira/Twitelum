@@ -10,7 +10,7 @@ class Tweet extends Component {
                     <span className="tweet__nomeUsuario">Caique M. Oliveira</span>
                     <a href=""><span className="tweet__userName">@caiquemoliveira</span></a>
                 </div>
-                <p className="tweet__conteudo"><span>Aprendendo React. Foda!!! <a href="/trends/#amet" data-reactroot="">#amet</a> consectetur adipisicing <a href="/trends/#elit" data-reactroot="">#elit</a>. Adipisci ut cumque tempora? Quam velit vitae voluptatum tempora iste, mollitia, sa</span></p>
+                <p className="tweet__conteudo"><span>{this.props.message} <a href="/trends/#amet" data-reactroot="">#amet</a> consectetur adipisicing <a href="/trends/#elit" data-reactroot="">#elit</a>. Adipisci ut cumque tempora? Quam velit vitae voluptatum tempora iste, mollitia, sa</span></p>
                 <footer className="tweet__footer">
                     <button className="btn btn--clean">
                         <svg className="icon icon--small iconHeart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.5 47.5">

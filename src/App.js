@@ -11,9 +11,23 @@ class App extends Component {
   constructor()
   {
       super();
+      // estados dos objetos
       this.state = {
-        novoTweet: ''
-      };
+        novoTweet: '',
+        tweets: ['something like that']
+    };
+  }
+
+/**
+ * Adiciona um novo tweet no feed
+ */
+  addNovoTweet = (event) =>
+  {
+    //   Remove o refresh da tela
+    event.preventDefault()
+
+    // Add o novo tweet ao array exibido no feed
+    this.setState({tweets: this.state.tweets.concat([this.state.novoTweet])})
   }
 
   render() {
@@ -25,10 +39,9 @@ class App extends Component {
         <div className="container">
             <Dashboard>
                 <Widget>
-                    <form className="novoTweet">
+                    <form className="novoTweet" onSubmit={this.addNovoTweet}>
                         <div className="novoTweet__editorArea">
                             <span className={`novoTweet__status ${this.state.novoTweet.length > 140 ? 'novoTweet__status--invalido' : ''}`}>{this.state.novoTweet.length}/140</span>
-                            {/* <span className={"novoTweet__status" + this.state.novoTweet.length > 140 ? 'novoTweet__status--invalido' : ''}>{this.state.novoTweet.length}/140</span> */}
                             <textarea className="novoTweet__editor" placeholder="O que está acontecendo?" 
                                 value={this.state.novoTweet} 
                                 onChange={(e) => {
@@ -46,7 +59,10 @@ class App extends Component {
             <Dashboard posicao="centro">
                 <Widget>
                     <div className="tweetsArea">
-                        <Tweet />
+                        {
+                            // Exibe cada tweet presente no array contido no state 
+                            this.state.tweets.map((tweet) => <Tweet key={Math.floor(Math.random()*1000000   )} message={tweet}/>)
+                        }
                     </div>
                 </Widget>
             </Dashboard>
