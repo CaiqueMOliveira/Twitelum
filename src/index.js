@@ -14,8 +14,19 @@ import './assets/css/novoTweet.css'
 
 
 import Home from './pages/Home';
-// import Login from './pages/Login';
+import Login from './pages/Login';
+import {BrowserRouter} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<Home />, document.getElementById('root'));
+ReactDOM.render(
+    <BrowserRouter>
+        <Switch>
+            <Route path="/" exact component={Home}/>
+            <Route path="/login" component={Login}/>
+            <Route component={() => <div>Not Found 404</div>}/>
+        </Switch>
+    </BrowserRouter>, 
+    document.getElementById('root')
+);
 registerServiceWorker();
