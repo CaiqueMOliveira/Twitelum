@@ -71,6 +71,17 @@ class Home extends Component {
     })
   }
 
+//   Remove o tweet selecionado
+  removerTweet = (idDoTweekQueVaiSumir) => {
+      const tweetsAtualizados = this.state.tweets.filter((tweetAtual) => {
+        return tweetAtual._id != idDoTweekQueVaiSumir
+      })
+
+      this.setState({
+          tweets: tweetsAtualizados
+      })
+  }
+
   render() {
     return (
       <Fragment>
@@ -107,6 +118,8 @@ class Home extends Component {
                                                                 key={tweet._id} 
                                                                 message={tweet.conteudo} 
                                                                 likeado={tweet.likeado} 
+                                                                removivel={tweet.removivel} 
+                                                                removeHandler={this.removerTweet} 
                                                                 totalLikes={tweet.totalLikes} 
                                                                 usuario={tweet.usuario}
                                                                 _id={tweet._id}/>
