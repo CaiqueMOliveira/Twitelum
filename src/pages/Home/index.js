@@ -22,11 +22,14 @@ class Home extends Component {
   }
 
 //   Fecha a modal do tweet selecionado
-  fechaModalHandler = (idDoTweetAtivo) => {
-    // Limpa o tweet ativo  
-    this.setState({
-        tweetAtivo: {}
-    })
+  fechaModalHandler = (event) => {
+    const isModal = event.target.classList.contains('modal')
+    if(isModal) {
+        // Limpa o tweet ativo  
+        this.setState({
+            tweetAtivo: {}
+        })
+    }
   }
 
  //   Obtendo os tweets do server
