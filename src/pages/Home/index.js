@@ -19,6 +19,20 @@ class Home extends Component {
     };
   }
 
+ //   Obtendo os tweets do server
+  componentDidMount() {
+      fetch(`http://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('token')}`)
+        .then((respostaVindoDoServidor) => {
+            return respostaVindoDoServidor.json()
+        })
+        .then((tweetsVindoDoServidor) => {
+            console.log(tweetsVindoDoServidor)
+            this.setState({
+                tweets: tweetsVindoDoServidor
+            })
+        })
+  }
+
 /**
  * Adiciona um novo tweet no feed
  */
@@ -60,7 +74,7 @@ class Home extends Component {
   render() {
     return (
       <Fragment>
-        <Helmet title={`Home (${this.state.tweets.length}) - Twitelum`}/>
+        <Helmet title={`Twitelum - Home (${this.state.tweets.length})`} />
         <Cabecalho>
             <NavMenu usuario="@caiquemoliveira" />
         </Cabecalho>
@@ -89,7 +103,14 @@ class Home extends Component {
                     <div className="tweetsArea">
                         {
                             // Exibe cada tweet presente no array contido no state 
-                            this.state.tweets.map((tweet) => <Tweet key={tweet._id} message={tweet.conteudo} usuario={tweet.usuario}/>)
+                            this.state.tweets.map((tweet) => <Tweet 
+                                                                key={tweet._id} 
+                                                                message={tweet.conteudo} 
+                                                                likeado={tweet.likeado} 
+                                                                totalLikes={tweet.totalLikes} 
+                                                                usuario={tweet.usuario}
+                                                                _id={tweet._id}/>
+                                                )
                         }
                     </div>
                 </Widget>
