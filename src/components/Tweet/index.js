@@ -28,7 +28,7 @@ class Tweet extends Component {
 
     render() {
         return (
-            <article className="tweet">
+            <article className="tweet" onClick={this.props.abreModalHandler}>
                 <div className="tweet__cabecalho">
                     <img className="tweet__fotoUsuario" src={this.props.usuario.foto} alt="" />
                     <span className="tweet__nomeUsuario">{this.props.usuario.nome}</span>
@@ -61,6 +61,7 @@ class Tweet extends Component {
     }
 }
 
+// Definindo as propriedades obrigatorias
 Tweet.propTypes = {
     _id: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired,

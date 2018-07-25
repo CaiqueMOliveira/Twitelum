@@ -5,6 +5,7 @@ import Dashboard from '../../components/Dashboard'
 import Widget from '../../components/Widget'
 import TrendsArea from '../../components/TrendsArea'
 import Tweet from '../../components/Tweet'
+import Modal from '../../components/Modal'
 import Helmet from "react-helmet";
 
 class Home extends Component {
@@ -15,8 +16,17 @@ class Home extends Component {
       // estados dos objetos
       this.state = {
         novoTweet: '',
-        tweets: []
+        tweets: [],
+        tweetAtivo: {}
     };
+  }
+
+//   Fecha a modal do tweet selecionado
+  fechaModalHandler = (idDoTweetAtivo) => {
+    // Limpa o tweet ativo  
+    this.setState({
+        tweetAtivo: {}
+    })
   }
 
  //   Obtendo os tweets do server
@@ -87,6 +97,14 @@ class Home extends Component {
       })
   }
 
+//   Abre a modal do tweet selecionado
+  abreModal = (idDoTweetSelecionado) => {
+    const tweetSelecionado = this.state.tweets.find((tweet) => tweet._id === idDoTweetSelecionado)
+    this.setState({
+        tweetAtivo: tweetSelecionado
+    })
+  }
+
   render() {
     return (
       <Fragment>
@@ -117,6 +135,7 @@ class Home extends Component {
             <Dashboard posicao="centro">
                 <Widget>
                     <div className="tweetsArea">
+                        {Boolean(this.state.tweets.length) || 'Carregando tweets...'}
                         {
                             // Exibe cada tweet presente no array contido no state 
                             this.state.tweets.map((tweet) => <Tweet 
@@ -125,6 +144,7 @@ class Home extends Component {
                                                                 likeado={tweet.likeado} 
                                                                 removivel={tweet.removivel} 
                                                                 removeHandler={this.removerTweet} 
+                                                                abreModalHandler={() => this.abreModal(tweet._id)} 
                                                                 totalLikes={tweet.totalLikes} 
                                                                 usuario={tweet.usuario}
                                                                 _id={tweet._id}/>
@@ -134,6 +154,20 @@ class Home extends Component {
                 </Widget>
             </Dashboard>
         </div>
+        <Modal 
+            fechaModalHandler={this.fechaModalHandler}
+            isAberto={Boolean(this.state.tweetAtivo._id)}>
+            {
+                this.state.tweetAtivo._id && 
+                    <Widget>
+                        <Tweet
+                            _id={this.state.tweetAtivo._id}
+                            message={this.state.tweetAtivo.conteudo}
+                            usuario={this.state.tweetAtivo.usuario}>
+                        </Tweet>
+                    </Widget>
+            }
+        </Modal>
       </Fragment>
     );
   }
