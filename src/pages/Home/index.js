@@ -26,7 +26,6 @@ class Home extends Component {
             return respostaVindoDoServidor.json()
         })
         .then((tweetsVindoDoServidor) => {
-            console.log(tweetsVindoDoServidor)
             this.setState({
                 tweets: tweetsVindoDoServidor
             })
@@ -73,12 +72,18 @@ class Home extends Component {
 
 //   Remove o tweet selecionado
   removerTweet = (idDoTweekQueVaiSumir) => {
-      const tweetsAtualizados = this.state.tweets.filter((tweetAtual) => {
-        return tweetAtual._id != idDoTweekQueVaiSumir
+      fetch(`http://twitelum-api.herokuapp.com/tweets/${idDoTweekQueVaiSumir}?X-AUTH-TOKEN=${localStorage.getItem('token')}`,{
+          method: 'DELETE'
       })
-
-      this.setState({
-          tweets: tweetsAtualizados
+      .then((respostaDoServer) => respostaDoServer.json())
+      .then((respostaEmObjeto) => {
+          console.log(respostaEmObjeto)
+          const tweetsAtualizados = this.state.tweets.filter((tweetAtual) => {
+            return tweetAtual._id !== idDoTweekQueVaiSumir
+          })
+          this.setState({
+              tweets: tweetsAtualizados
+          })
       })
   }
 

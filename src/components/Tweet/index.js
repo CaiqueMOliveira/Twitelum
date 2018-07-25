@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import './tweet.css'
 
 class Tweet extends Component {
@@ -23,10 +24,6 @@ class Tweet extends Component {
         })
         .then((res) => res.json())
         .then((resEmObjeto) => console.log(resEmObjeto))
-    }
-
-    removeHandler = (tweetQueIraSumir) => {
-
     }
 
     render() {
@@ -62,6 +59,19 @@ class Tweet extends Component {
             </article>
         )
     }
+}
+
+Tweet.propTypes = {
+    _id: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+    usuario: PropTypes.shape({
+        foto: PropTypes.string.isRequired,
+        nome: PropTypes.string.isRequired,
+        login: PropTypes.string.isRequired
+    }),
+    likeado: PropTypes.bool,
+    removivel: PropTypes.bool,
+    removeHandler: PropTypes.func
 }
 
 export default Tweet
