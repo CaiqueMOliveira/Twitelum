@@ -12,17 +12,21 @@ import './assets/css/notificacao.css'
 import './assets/css/novoTweet.css'
 // import './index.css';
 
+// React Redux
+import {Provider} from 'react-redux'
 //  Redux
-import './store.js';
+import store from './store.js';
 
 import {BrowserRouter} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import Routes from './routes'
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Routes/>
-    </BrowserRouter>, 
+    <Provider store={store}>
+        <BrowserRouter>
+            <Routes/>
+        </BrowserRouter> 
+    </Provider>,
     document.getElementById('root')
 );
 registerServiceWorker();

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import './tweet.css'
+import * as TweetsActions from "../../actions/TweetsActions";
 
 class Tweet extends Component {
     constructor(props){
@@ -9,6 +10,15 @@ class Tweet extends Component {
             likeado: this.props.likeado,
             totalLikes: this.props.totalLikes
         }
+    }
+
+    static contextTypes = {
+        store: PropTypes.object
+    }
+
+    removeHandler = (idDoTweetQueVaiSumir) => {
+        console.log('remove handler')
+        this.context.store.dispatch(TweetsActions.removeTweet(idDoTweetQueVaiSumir))
     }
 
     // Funcao de like do botao do tweet
@@ -51,7 +61,7 @@ class Tweet extends Component {
                     </button>
                     {
                         this.props.removivel &&
-                        <button className="btn btn--blue btn--remove" onClick={() => this.props.removeHandler(this.props._id)}>
+                        <button className="btn btn--blue btn--remove" onClick={() => this.removeHandler(this.props._id)}>
                             X
                         </button>
                     }

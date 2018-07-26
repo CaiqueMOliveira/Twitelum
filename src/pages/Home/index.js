@@ -7,6 +7,8 @@ import TrendsArea from '../../components/TrendsArea'
 import Tweet from '../../components/Tweet'
 import Modal from '../../components/Modal'
 import Helmet from "react-helmet";
+import PropTypes from "prop-types";
+import * as TweetsActions from "../../actions/TweetsActions";
 
 class Home extends Component {
 
@@ -32,28 +34,28 @@ class Home extends Component {
     }
   }
 
+//   Permitindo a gravacao das propriedades no context
+  static contextTypes =  {
+    store: PropTypes.object
+  } 
+
  //   Obtendo os tweets do server
   componentDidMount() {
-      window.store.subscribe(() =>{
-          console.log('Estou inscrito - componentDidMOunt')
-          
-          // Obtem os tweets do Store
-          const tweetsVindoDaStore = window.store.getState()
-          
-          // Altera os estado dos tweets da Home 
-          this.setState({
-              tweets: tweetsVindoDaStore
+      this.context.store.subscribe(() =>{
+            console.log('Estou inscrito - Home')
+            
+            // Obtem os tweets do Store
+            const tweetsVindoDaStore = this.context.store.getState().tweets
+
+            
+            // Altera os estado dos tweets da Home 
+            this.setState({
+                tweets: tweetsVindoDaStore
             })
         })
 
-      fetch(`http://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('token')}`)
-        .then((respostaVindoDoServidor) => {
-            return respostaVindoDoServidor.json()
-        })
-        .then((tweetsVindoDoServidor) => {
-            // Despacho dos tweets na Store
-            window.store.dispatch({type: 'CARREGA_TWEETS', tweets: tweetsVindoDoServidor})
-        })
+        // Executa o dispatch pelo middleware
+        this.context.store.dispatch(TweetsActions.carregaTweets())
   }
 
 /**
@@ -63,53 +65,29 @@ class Home extends Component {
   {
     //   Remove o refresh da tela
     event.preventDefault()
-
-    fetch(`http://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('token')}`,{
-        method: 'POST',
-        headers: {
-            'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({conteudo: this.state.novoTweet})
-    })
-    .then((respostaDoServer) => {
-        if(respostaDoServer.status === 201)
-        {
-            return respostaDoServer.json()
-        }else{
-            throw new Error('Falha ao criar o novo tweet :(')
-        }
-    })
-    .then((tweetDoServer) => {
-        console.log(tweetDoServer)
-        this.setState({
-            // Add o novo tweet ao array exibido no feed        
-            tweets: [tweetDoServer, ...this.state.tweets],
-            
-            // Limpa o campo de mensagem do novo tweet
-            novoTweet: ''
-        })
-    })
-    .catch((error) => {
-        alert(error)
+    const novoTweet = this.state.novoTweet
+    this.context.store.dispatch(TweetsActions.adicionarTweet(novoTweet))
+    this.setState({
+        novoTweet: ''
     })
   }
 
 //   Remove o tweet selecionado
-  removerTweet = (idDoTweekQueVaiSumir) => {
-      fetch(`http://twitelum-api.herokuapp.com/tweets/${idDoTweekQueVaiSumir}?X-AUTH-TOKEN=${localStorage.getItem('token')}`,{
-          method: 'DELETE'
-      })
-      .then((respostaDoServer) => respostaDoServer.json())
-      .then((respostaEmObjeto) => {
-          console.log(respostaEmObjeto)
-          const tweetsAtualizados = this.state.tweets.filter((tweetAtual) => {
-            return tweetAtual._id !== idDoTweekQueVaiSumir
-          })
-          this.setState({
-              tweets: tweetsAtualizados
-          })
-      })
-  }
+//   removerTweet = (idDoTweekQueVaiSumir) => {
+//       fetch(`http://twitelum-api.herokuapp.com/tweets/${idDoTweekQueVaiSumir}?X-AUTH-TOKEN=${localStorage.getItem('token')}`,{
+//           method: 'DELETE'
+//       })
+//       .then((respostaDoServer) => respostaDoServer.json())
+//       .then((respostaEmObjeto) => {
+//           console.log(respostaEmObjeto)
+//           const tweetsAtualizados = this.state.tweets.filter((tweetAtual) => {
+//             return tweetAtual._id !== idDoTweekQueVaiSumir
+//           })
+
+//           // Despacho dos tweets na Store
+//           this.context.store.dispatch({type: 'CARREGA_TWEETS', tweets: tweetsAtualizados})
+//       })
+//   }
 
 //   Abre a modal do tweet selecionado
   abreModal = (idDoTweetSelecionado, event) => {
@@ -188,6 +166,15 @@ class Home extends Component {
                     </Widget>
             }
         </Modal>
+
+        {
+            this.context.store.getState().notifications &&
+            <div className="notificacaoMsg"
+                onAnimationEnd={() => this.context.store.dispatch({type: "LIMPAR_NOTIFICACAO"})}>
+                {this.context.store.getState().notifications}
+            </div>
+        }
+
       </Fragment>
     );
   }
