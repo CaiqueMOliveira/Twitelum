@@ -34,14 +34,25 @@ class Home extends Component {
 
  //   Obtendo os tweets do server
   componentDidMount() {
+      window.store.subscribe(() =>{
+          console.log('Estou inscrito - componentDidMOunt')
+          
+          // Obtem os tweets do Store
+          const tweetsVindoDaStore = window.store.getState()
+          
+          // Altera os estado dos tweets da Home 
+          this.setState({
+              tweets: tweetsVindoDaStore
+            })
+        })
+
       fetch(`http://twitelum-api.herokuapp.com/tweets?X-AUTH-TOKEN=${localStorage.getItem('token')}`)
         .then((respostaVindoDoServidor) => {
             return respostaVindoDoServidor.json()
         })
         .then((tweetsVindoDoServidor) => {
-            this.setState({
-                tweets: tweetsVindoDoServidor
-            })
+            // Despacho dos tweets na Store
+            window.store.dispatch({type: 'CARREGA_TWEETS', tweets: tweetsVindoDoServidor})
         })
   }
 
@@ -101,11 +112,15 @@ class Home extends Component {
   }
 
 //   Abre a modal do tweet selecionado
-  abreModal = (idDoTweetSelecionado) => {
-    const tweetSelecionado = this.state.tweets.find((tweet) => tweet._id === idDoTweetSelecionado)
-    this.setState({
-        tweetAtivo: tweetSelecionado
-    })
+  abreModal = (idDoTweetSelecionado, event) => {
+    const isDentroDoTweetFooter = event.target.closest('.tweet__footer')
+    
+    if(!isDentroDoTweetFooter){
+        const tweetSelecionado = this.state.tweets.find((tweet) => tweet._id === idDoTweetSelecionado)
+        this.setState({
+            tweetAtivo: tweetSelecionado
+        })
+    }
   }
 
   render() {
@@ -147,7 +162,7 @@ class Home extends Component {
                                                                 likeado={tweet.likeado} 
                                                                 removivel={tweet.removivel} 
                                                                 removeHandler={this.removerTweet} 
-                                                                abreModalHandler={() => this.abreModal(tweet._id)} 
+                                                                abreModalHandler={(event) => this.abreModal(tweet._id, event)} 
                                                                 totalLikes={tweet.totalLikes} 
                                                                 usuario={tweet.usuario}
                                                                 _id={tweet._id}/>
@@ -166,7 +181,9 @@ class Home extends Component {
                         <Tweet
                             _id={this.state.tweetAtivo._id}
                             message={this.state.tweetAtivo.conteudo}
-                            usuario={this.state.tweetAtivo.usuario}>
+                            usuario={this.state.tweetAtivo.usuario}
+                            totalLikes={this.state.tweetAtivo.totalLikes}
+                            likeado={this.state.tweetAtivo.likeado}>
                         </Tweet>
                     </Widget>
             }

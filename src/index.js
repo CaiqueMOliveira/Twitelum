@@ -12,6 +12,9 @@ import './assets/css/notificacao.css'
 import './assets/css/novoTweet.css'
 // import './index.css';
 
+//  Redux
+import './store.js';
+
 import {BrowserRouter} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import Routes from './routes'
